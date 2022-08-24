@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Penjualan;
+use Penjualan;
+use Carbon\Carbon;
+use App\Models\Registrant;
 
 class PenjualanController extends Controller
 {
@@ -15,11 +17,26 @@ class PenjualanController extends Controller
         return view('welcome', compact('penjualan'));
     }
 
-    public function showPerTanggal($tglbeli, $tgljual)
+    
+
+    // public function laporan()
+    // {
+    //     // $penjualan = Penjualan::all();
+    //     return view('', compact('penjualan'));
+    // }
+
+    
+
+    public function showPerTanggal()
     {
-        dd(['tanggal beli '.$tglbeli,'tanggal jual'.$tgljual]);
-        // $showDataTanggal = Penjualan::with('nama')->whereBetween('created_at',[$tglbeli,$tgljual])->get();
-        // return view('pertanggal', compact('showDataTanggal'));
+        if (request()->start_date || request()->end_date) {
+            $start_date = Carbon::parse(request()->start_date)->toDateTimeString();
+            $end_date = Carbon::parse(request()->end_date)->toDateTimeString();
+            $data = Registrant::whereBetween('created_at',[$start_date,$end_date])->get();
+        } else {
+            $data = Registrant::latest()->get();
+        }
+        return view('reservator.laporan.index', compact('data'));
     }
 
 }

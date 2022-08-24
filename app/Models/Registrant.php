@@ -12,7 +12,6 @@ class Registrant extends Model
     protected $fillable = [
         'name',
         'email',
-
     ];
 
 }
